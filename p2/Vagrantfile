@@ -1,0 +1,15 @@
+Vagrant.require_version ">= 2.4.1"
+
+Vagrant.configure("2") do |config|
+    config_variants = [["S", "0", "bootstrap-server.sh"]]
+    (0..0).each do |i|
+        config.vm.define "aronez#{config_variants[i][0]}" do |node|
+             node.vm.box = "generic/debian12"
+             node.vm.box_architecture = "amd64"
+             node.vm.hostname = "aronez#{config_variants[i][0]}"
+             node.vm.synced_folder ".", "/vagrant"
+             node.vm.network "private_network", ip: "192.168.56.11" + config_variants[i][1]
+             node.vm.provision :shell, path: "scripts/#{config_variants[i][2]}"
+        end
+    end
+end
